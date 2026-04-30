@@ -1,0 +1,20 @@
+Betting model backtest comparison summary:
+- The post-2010 cutoff made Logistic Regression the strongest final probability model by log loss, ROC AUC, and Brier score.
+- The Random Forest betting backtest is retained only as a historical/exploratory comparison.
+
+Flat betting comparison:
+- logistic best flat threshold: 0.00
+- logistic best flat ROI: -0.038796
+- random forest best flat threshold: 0.08
+- random forest best flat ROI: -0.044499
+
+Kelly comparison:
+- logistic best Kelly final bankroll: 183.601672
+- random forest best Kelly final bankroll: 208.997119
+
+Overall interpretation:
+- more stable model by flat-bet drawdown: logistic_regression
+- logistic improved over RF on at least one betting criterion: True
+- any positive logistic flat ROI: False
+- any positive random-forest flat ROI: False
+- Threshold rankings remain descriptive only; they must not feed back into model tuning.

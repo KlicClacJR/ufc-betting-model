@@ -9,6 +9,9 @@ from src._pipeline_impl import (
     build_favorite_longshot_analysis,
     build_probability_decile_calibration,
     build_time_segment_performance,
+    run_logistic_betting_failure_diagnostics,
     run_betting_failure_diagnostics,
+    run_model_betting_failure_diagnostics,
+    run_random_forest_betting_failure_diagnostics,
     summarize_segment_groups,
 )

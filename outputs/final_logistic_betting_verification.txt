@@ -1,0 +1,32 @@
+Final Logistic Betting Verification
+
+Status: PASS
+
+Pipeline checks:
+- run_betting_backtest() resolves to: run_logistic_betting_backtest
+- run_betting_failure_diagnostics() resolves to: run_betting_failure_diagnostics
+- run_random_forest_betting_backtest() resolves to: run_random_forest_betting_backtest
+- main betting path uses frozen Logistic Regression predictions from outputs/final_logistic_test_predictions.csv
+- historical Random Forest path remains isolated and uses outputs/final_random_forest_test_predictions.csv
+
+Final model metric winner checks:
+- Logistic wins log_loss (0.657050), roc_auc (0.656906), brier (0.232541)
+- Random Forest wins accuracy (0.604329)
+
+Betting result checks:
+- Logistic best flat ROI: -0.038796 at threshold 0.00
+- Random Forest best flat ROI: -0.044499 at threshold 0.08
+- Logistic improves slightly over RF on flat ROI: True
+- Neither betting model is profitable on the hold-out odds-matched subset.
+
+Files touched in this verification pass:
+- src/_pipeline_impl.py
+- outputs/final_logistic_betting_verification.txt
+
+Anything inconsistent found:
+- None after the small helper-default fix above.
+
+Anything fixed:
+- Aligned load_backtest_inputs() default prediction path with the main Logistic betting workflow.
+
+GitHub-ready: YES

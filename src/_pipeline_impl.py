@@ -102,6 +102,11 @@ BETTING_FLAT_BACKTEST_BETS_PATH = OUTPUTS_DIR / "betting_flat_backtest_bets.csv"
 BETTING_KELLY_BACKTEST_RESULTS_PATH = OUTPUTS_DIR / "betting_kelly_backtest_results.csv"
 BETTING_KELLY_BACKTEST_BETS_PATH = OUTPUTS_DIR / "betting_kelly_backtest_bets.csv"
 BETTING_BACKTEST_SUMMARY_PATH = OUTPUTS_DIR / "betting_backtest_summary.txt"
+LOGISTIC_BETTING_FLAT_BACKTEST_RESULTS_PATH = OUTPUTS_DIR / "logistic_betting_flat_backtest_results.csv"
+LOGISTIC_BETTING_FLAT_BACKTEST_BETS_PATH = OUTPUTS_DIR / "logistic_betting_flat_backtest_bets.csv"
+LOGISTIC_BETTING_KELLY_BACKTEST_RESULTS_PATH = OUTPUTS_DIR / "logistic_betting_kelly_backtest_results.csv"
+LOGISTIC_BETTING_KELLY_BACKTEST_BETS_PATH = OUTPUTS_DIR / "logistic_betting_kelly_backtest_bets.csv"
+LOGISTIC_BETTING_BACKTEST_SUMMARY_PATH = OUTPUTS_DIR / "logistic_betting_backtest_summary.txt"
 BETTING_SEGMENT_BY_SIDE_PATH = OUTPUTS_DIR / "betting_segment_by_side.csv"
 BETTING_SEGMENT_BY_ODDS_BUCKET_PATH = OUTPUTS_DIR / "betting_segment_by_odds_bucket.csv"
 BETTING_SEGMENT_BY_MARKET_PROB_BUCKET_PATH = OUTPUTS_DIR / "betting_segment_by_market_prob_bucket.csv"
@@ -115,6 +120,22 @@ BETTING_FAVORITE_LONGSHOT_ANALYSIS_PATH = OUTPUTS_DIR / "betting_favorite_longsh
 BETTING_CUMULATIVE_PROFIT_PATH = OUTPUTS_DIR / "betting_cumulative_profit.csv"
 BETTING_TIME_SEGMENT_PERFORMANCE_PATH = OUTPUTS_DIR / "betting_time_segment_performance.csv"
 BETTING_FAILURE_DIAGNOSTICS_SUMMARY_PATH = OUTPUTS_DIR / "betting_failure_diagnostics_summary.txt"
+LOGISTIC_BETTING_SEGMENT_BY_SIDE_PATH = OUTPUTS_DIR / "logistic_betting_segment_by_side.csv"
+LOGISTIC_BETTING_SEGMENT_BY_ODDS_BUCKET_PATH = OUTPUTS_DIR / "logistic_betting_segment_by_odds_bucket.csv"
+LOGISTIC_BETTING_SEGMENT_BY_MARKET_PROB_BUCKET_PATH = OUTPUTS_DIR / "logistic_betting_segment_by_market_prob_bucket.csv"
+LOGISTIC_BETTING_SEGMENT_BY_MODEL_PROB_BUCKET_PATH = OUTPUTS_DIR / "logistic_betting_segment_by_model_prob_bucket.csv"
+LOGISTIC_BETTING_SEGMENT_BY_EDGE_BUCKET_PATH = OUTPUTS_DIR / "logistic_betting_segment_by_edge_bucket.csv"
+LOGISTIC_BETTING_EDGE_QUALITY_PATH = OUTPUTS_DIR / "logistic_betting_edge_quality.csv"
+LOGISTIC_BETTING_EDGE_CORRELATIONS_PATH = OUTPUTS_DIR / "logistic_betting_edge_correlations.csv"
+LOGISTIC_BETTING_MODEL_CALIBRATION_ON_MATCHED_ODDS_PATH = OUTPUTS_DIR / "logistic_betting_model_calibration_on_matched_odds.csv"
+LOGISTIC_BETTING_MARKET_CALIBRATION_ON_MATCHED_ODDS_PATH = OUTPUTS_DIR / "logistic_betting_market_calibration_on_matched_odds.csv"
+LOGISTIC_BETTING_FAVORITE_LONGSHOT_ANALYSIS_PATH = OUTPUTS_DIR / "logistic_betting_favorite_longshot_analysis.csv"
+LOGISTIC_BETTING_CUMULATIVE_PROFIT_PATH = OUTPUTS_DIR / "logistic_betting_cumulative_profit.csv"
+LOGISTIC_BETTING_TIME_SEGMENT_PERFORMANCE_PATH = OUTPUTS_DIR / "logistic_betting_time_segment_performance.csv"
+LOGISTIC_BETTING_FAILURE_DIAGNOSTICS_SUMMARY_PATH = OUTPUTS_DIR / "logistic_betting_failure_diagnostics_summary.txt"
+BETTING_MODEL_BACKTEST_COMPARISON_PATH = OUTPUTS_DIR / "betting_model_backtest_comparison.csv"
+BETTING_MODEL_BACKTEST_COMPARISON_SUMMARY_PATH = OUTPUTS_DIR / "betting_model_backtest_comparison_summary.txt"
+POST_CUTOFF_BETTING_MODEL_UPDATE_SUMMARY_PATH = OUTPUTS_DIR / "post_cutoff_betting_model_update_summary.txt"
 MODELING_AUDIT_REPORT_PATH = OUTPUTS_DIR / "modeling_audit_report.md"
 AUDIT_SPLIT_SUMMARY_PATH = OUTPUTS_DIR / "audit_split_summary.csv"
 AUDIT_METRIC_RECALCULATION_PATH = OUTPUTS_DIR / "audit_metric_recalculation.csv"
@@ -725,19 +746,19 @@ def run_odds_ingestion_pipeline(
 
 def load_backtest_inputs(
     merged_odds_path: Path = MODELING_DATASET_WITH_ODDS_PATH,
-    prediction_path: Path = FINAL_RANDOM_FOREST_TEST_PREDICTIONS_PATH,
+    prediction_path: Path = FINAL_LOGISTIC_TEST_PREDICTIONS_PATH,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Load merged odds data and frozen Random Forest hold-out predictions."""
+    """Load merged odds data and one frozen hold-out prediction file."""
     merged_odds_df = pd.read_csv(merged_odds_path, parse_dates=[DATE_COLUMN], low_memory=False)
     prediction_df = pd.read_csv(prediction_path, parse_dates=[DATE_COLUMN])
     return merged_odds_df, prediction_df
 
 
-def prepare_random_forest_backtest_dataframe(
+def prepare_model_backtest_dataframe(
     merged_odds_df: pd.DataFrame,
     prediction_df: pd.DataFrame,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
-    """Align the frozen Random Forest test predictions to the merged odds dataset."""
+    """Align one frozen test prediction file to the merged odds dataset."""
     merge_columns = [DATE_COLUMN, "red_fighter_name", "blue_fighter_name", TARGET_COLUMN]
     odds_columns = [
         DATE_COLUMN,
@@ -792,6 +813,14 @@ def prepare_random_forest_backtest_dataframe(
         "odds_source": str(valid["odds_source"].mode().iloc[0]) if not valid.empty and valid["odds_source"].notna().any() else "UNKNOWN",
     }
     return valid, diagnostics
+
+
+def prepare_random_forest_backtest_dataframe(
+    merged_odds_df: pd.DataFrame,
+    prediction_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Backward-compatible wrapper for the historical Random Forest betting path."""
+    return prepare_model_backtest_dataframe(merged_odds_df, prediction_df)
 
 
 def build_bet_selection_frame(backtest_df: pd.DataFrame, edge_threshold: float) -> pd.DataFrame:
@@ -999,6 +1028,8 @@ def build_betting_backtest_summary(
     diagnostics: dict[str, Any],
     flat_results: pd.DataFrame,
     kelly_results: pd.DataFrame,
+    model_label: str = "Random Forest",
+    historical_note: str | None = None,
 ) -> str:
     """Create a human-readable betting backtest summary."""
     best_flat = flat_results.sort_values(["roi", "total_profit"], ascending=[False, False]).iloc[0] if not flat_results.empty else None
@@ -1006,7 +1037,7 @@ def build_betting_backtest_summary(
 
     lines = [
         "Betting backtest summary:",
-        "- model used: Random Forest",
+        f"- model used: {model_label}",
         f"- odds source: {diagnostics['odds_source']}",
         f"- matched test fights with usable odds: {len(backtest_df)}",
         "- this backtest is exploratory and is not being used to tune the ML model.",
@@ -1042,25 +1073,37 @@ def build_betting_backtest_summary(
                 f"- max_drawdown: {best_kelly.max_drawdown:.6f}",
             ]
         )
+    if historical_note:
+        lines.extend(["", f"- note: {historical_note}"])
 
     lines.extend(
         [
             "",
             "Warnings and limitations:",
             "- The odds source is 'zewnetrzne', which appears to be an external or aggregated source rather than a directly tradable single sportsbook.",
-            "- The backtest uses only fights with matched usable odds and frozen Random Forest test predictions.",
+            f"- The backtest uses only fights with matched usable odds and frozen {model_label} test predictions.",
             "- No model retraining, feature tuning, or threshold optimization should feed back into the model after this step.",
         ]
     )
     return "\n".join(lines)
 
 
-def run_random_forest_betting_backtest() -> dict[str, Any]:
-    """Run the first exploratory betting backtest using frozen Random Forest test predictions and merged odds."""
+def run_model_betting_backtest(
+    *,
+    model_label: str,
+    prediction_path: Path,
+    flat_results_path: Path,
+    flat_bets_path: Path,
+    kelly_results_path: Path,
+    kelly_bets_path: Path,
+    summary_path: Path,
+    historical_note: str | None = None,
+) -> dict[str, Any]:
+    """Run one frozen-model betting backtest against the merged odds dataset."""
     OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    merged_odds_df, prediction_df = load_backtest_inputs()
-    backtest_df, diagnostics = prepare_random_forest_backtest_dataframe(merged_odds_df, prediction_df)
+    merged_odds_df, prediction_df = load_backtest_inputs(prediction_path=prediction_path)
+    backtest_df, diagnostics = prepare_model_backtest_dataframe(merged_odds_df, prediction_df)
 
     flat_results, flat_bets = run_flat_betting_backtest(backtest_df, FLAT_EDGE_THRESHOLDS)
     kelly_results, kelly_bets = run_fractional_kelly_backtest(
@@ -1069,15 +1112,22 @@ def run_random_forest_betting_backtest() -> dict[str, Any]:
         kelly_fractions=KELLY_FRACTIONS,
     )
 
-    flat_results.to_csv(BETTING_FLAT_BACKTEST_RESULTS_PATH, index=False)
-    flat_bets.to_csv(BETTING_FLAT_BACKTEST_BETS_PATH, index=False)
-    kelly_results.to_csv(BETTING_KELLY_BACKTEST_RESULTS_PATH, index=False)
-    kelly_bets.to_csv(BETTING_KELLY_BACKTEST_BETS_PATH, index=False)
+    flat_results.to_csv(flat_results_path, index=False)
+    flat_bets.to_csv(flat_bets_path, index=False)
+    kelly_results.to_csv(kelly_results_path, index=False)
+    kelly_bets.to_csv(kelly_bets_path, index=False)
 
-    summary_text = build_betting_backtest_summary(backtest_df, diagnostics, flat_results, kelly_results)
-    BETTING_BACKTEST_SUMMARY_PATH.write_text(summary_text)
+    summary_text = build_betting_backtest_summary(
+        backtest_df,
+        diagnostics,
+        flat_results,
+        kelly_results,
+        model_label=model_label,
+        historical_note=historical_note,
+    )
+    summary_path.write_text(summary_text)
 
-    print("Random Forest betting backtest summary:")
+    print(f"{model_label} betting backtest summary:")
     print(f"- usable test fights with odds: {len(backtest_df)}")
     if not flat_results.empty:
         best_flat = flat_results.sort_values(["roi", "total_profit"], ascending=[False, False]).iloc[0]
@@ -1102,13 +1152,40 @@ def run_random_forest_betting_backtest() -> dict[str, Any]:
         "kelly_bets": kelly_bets,
         "summary_text": summary_text,
         "created_files": [
-            str(BETTING_FLAT_BACKTEST_RESULTS_PATH),
-            str(BETTING_FLAT_BACKTEST_BETS_PATH),
-            str(BETTING_KELLY_BACKTEST_RESULTS_PATH),
-            str(BETTING_KELLY_BACKTEST_BETS_PATH),
-            str(BETTING_BACKTEST_SUMMARY_PATH),
+            str(flat_results_path),
+            str(flat_bets_path),
+            str(kelly_results_path),
+            str(kelly_bets_path),
+            str(summary_path),
         ],
     }
+
+
+def run_random_forest_betting_backtest() -> dict[str, Any]:
+    """Run the historical exploratory Random Forest betting backtest."""
+    return run_model_betting_backtest(
+        model_label="Random Forest",
+        prediction_path=FINAL_RANDOM_FOREST_TEST_PREDICTIONS_PATH,
+        flat_results_path=BETTING_FLAT_BACKTEST_RESULTS_PATH,
+        flat_bets_path=BETTING_FLAT_BACKTEST_BETS_PATH,
+        kelly_results_path=BETTING_KELLY_BACKTEST_RESULTS_PATH,
+        kelly_bets_path=BETTING_KELLY_BACKTEST_BETS_PATH,
+        summary_path=BETTING_BACKTEST_SUMMARY_PATH,
+        historical_note="This retained Random Forest betting pass is historical/exploratory after the post-2010 cutoff change.",
+    )
+
+
+def run_logistic_betting_backtest() -> dict[str, Any]:
+    """Run the main post-cutoff betting backtest using frozen Logistic Regression probabilities."""
+    return run_model_betting_backtest(
+        model_label="Logistic Regression",
+        prediction_path=FINAL_LOGISTIC_TEST_PREDICTIONS_PATH,
+        flat_results_path=LOGISTIC_BETTING_FLAT_BACKTEST_RESULTS_PATH,
+        flat_bets_path=LOGISTIC_BETTING_FLAT_BACKTEST_BETS_PATH,
+        kelly_results_path=LOGISTIC_BETTING_KELLY_BACKTEST_RESULTS_PATH,
+        kelly_bets_path=LOGISTIC_BETTING_KELLY_BACKTEST_BETS_PATH,
+        summary_path=LOGISTIC_BETTING_BACKTEST_SUMMARY_PATH,
+    )
 
 
 def load_flat_backtest_bets(path: Path = BETTING_FLAT_BACKTEST_BETS_PATH) -> pd.DataFrame:
@@ -1386,6 +1463,7 @@ def build_betting_failure_diagnostics_summary(
     model_calibration: pd.DataFrame,
     market_calibration: pd.DataFrame,
     favorite_longshot: pd.DataFrame,
+    model_label: str = "Random Forest",
 ) -> str:
     """Write a concise diagnostic summary for why the first betting backtest lost money."""
     top_losing_segment = odds_segments.sort_values("roi", ascending=True).iloc[0] if not odds_segments.empty else None
@@ -1420,6 +1498,7 @@ def build_betting_failure_diagnostics_summary(
     lines = [
         "Betting failure diagnostics summary:",
         "- This is post-hoc diagnostic analysis only. It must not be used to tune or retrain the model.",
+        f"- model analyzed: {model_label}",
         f"- analyzed flat-betting policy threshold: {threshold:.2f}",
         "",
         "Key findings:",
@@ -1443,7 +1522,7 @@ def build_betting_failure_diagnostics_summary(
             "",
             "Likely reasons the backtest lost money:",
             "- market efficiency and vig likely erased much of the modeled edge",
-            "- the Random Forest probabilities appear imperfectly calibrated on the odds-matched subset",
+            f"- the {model_label} probabilities appear imperfectly calibrated on the odds-matched subset",
             "- high-odds bets added noise and large drawdowns",
             "- the selected odds source is aggregated ('zewnetrzne') rather than a sharp directly tradable source",
             "- some model signals may already be partially priced by the market",
@@ -1460,10 +1539,29 @@ def build_betting_failure_diagnostics_summary(
     return "\n".join(lines)
 
 
-def run_betting_failure_diagnostics() -> dict[str, Any]:
-    """Diagnose why the first flat-betting backtest lost money, without changing any model outputs."""
-    flat_bets_df = load_flat_backtest_bets()
-    best_threshold = select_best_flat_threshold()
+def run_model_betting_failure_diagnostics(
+    *,
+    model_label: str,
+    prediction_path: Path,
+    flat_bets_path: Path,
+    flat_results_path: Path,
+    segment_by_side_path: Path,
+    segment_by_odds_bucket_path: Path,
+    segment_by_market_prob_bucket_path: Path,
+    segment_by_model_prob_bucket_path: Path,
+    segment_by_edge_bucket_path: Path,
+    edge_quality_path: Path,
+    edge_correlations_path: Path,
+    model_calibration_path: Path,
+    market_calibration_path: Path,
+    favorite_longshot_path: Path,
+    cumulative_profit_path: Path,
+    time_segment_performance_path: Path,
+    summary_path: Path,
+) -> dict[str, Any]:
+    """Diagnose one frozen-model flat-betting backtest without changing any model outputs."""
+    flat_bets_df = load_flat_backtest_bets(path=flat_bets_path)
+    best_threshold = select_best_flat_threshold(flat_results_path=flat_results_path)
     chosen_bets = filter_bets_for_threshold(flat_bets_df, best_threshold)
     chosen_bets = add_betting_diagnostic_buckets(chosen_bets)
 
@@ -1478,8 +1576,8 @@ def run_betting_failure_diagnostics() -> dict[str, Any]:
     cumulative_profit = build_cumulative_profit_table(chosen_bets)
     time_segment_performance = build_time_segment_performance(chosen_bets)
 
-    merged_odds_df, prediction_df = load_backtest_inputs()
-    matched_odds_df, diagnostics = prepare_random_forest_backtest_dataframe(merged_odds_df, prediction_df)
+    merged_odds_df, prediction_df = load_backtest_inputs(prediction_path=prediction_path)
+    matched_odds_df, diagnostics = prepare_model_backtest_dataframe(merged_odds_df, prediction_df)
     matched_odds_df["actual_red_win"] = matched_odds_df[TARGET_COLUMN].astype(float)
     model_calibration = build_probability_decile_calibration(
         matched_odds_df,
@@ -1496,18 +1594,18 @@ def run_betting_failure_diagnostics() -> dict[str, Any]:
         comparison_label="model_probability",
     )
 
-    side_segments.to_csv(BETTING_SEGMENT_BY_SIDE_PATH, index=False)
-    odds_segments.to_csv(BETTING_SEGMENT_BY_ODDS_BUCKET_PATH, index=False)
-    market_prob_segments.to_csv(BETTING_SEGMENT_BY_MARKET_PROB_BUCKET_PATH, index=False)
-    model_prob_segments.to_csv(BETTING_SEGMENT_BY_MODEL_PROB_BUCKET_PATH, index=False)
-    edge_segments.to_csv(BETTING_SEGMENT_BY_EDGE_BUCKET_PATH, index=False)
-    edge_quality.to_csv(BETTING_EDGE_QUALITY_PATH, index=False)
-    edge_correlations.to_csv(BETTING_EDGE_CORRELATIONS_PATH, index=False)
-    model_calibration.to_csv(BETTING_MODEL_CALIBRATION_ON_MATCHED_ODDS_PATH, index=False)
-    market_calibration.to_csv(BETTING_MARKET_CALIBRATION_ON_MATCHED_ODDS_PATH, index=False)
-    favorite_longshot.to_csv(BETTING_FAVORITE_LONGSHOT_ANALYSIS_PATH, index=False)
-    cumulative_profit.to_csv(BETTING_CUMULATIVE_PROFIT_PATH, index=False)
-    time_segment_performance.to_csv(BETTING_TIME_SEGMENT_PERFORMANCE_PATH, index=False)
+    side_segments.to_csv(segment_by_side_path, index=False)
+    odds_segments.to_csv(segment_by_odds_bucket_path, index=False)
+    market_prob_segments.to_csv(segment_by_market_prob_bucket_path, index=False)
+    model_prob_segments.to_csv(segment_by_model_prob_bucket_path, index=False)
+    edge_segments.to_csv(segment_by_edge_bucket_path, index=False)
+    edge_quality.to_csv(edge_quality_path, index=False)
+    edge_correlations.to_csv(edge_correlations_path, index=False)
+    model_calibration.to_csv(model_calibration_path, index=False)
+    market_calibration.to_csv(market_calibration_path, index=False)
+    favorite_longshot.to_csv(favorite_longshot_path, index=False)
+    cumulative_profit.to_csv(cumulative_profit_path, index=False)
+    time_segment_performance.to_csv(time_segment_performance_path, index=False)
 
     summary_text = build_betting_failure_diagnostics_summary(
         threshold=best_threshold,
@@ -1518,8 +1616,9 @@ def run_betting_failure_diagnostics() -> dict[str, Any]:
         model_calibration=model_calibration,
         market_calibration=market_calibration,
         favorite_longshot=favorite_longshot,
+        model_label=model_label,
     )
-    BETTING_FAILURE_DIAGNOSTICS_SUMMARY_PATH.write_text(summary_text)
+    summary_path.write_text(summary_text)
 
     top_losing_segment = odds_segments.sort_values("roi", ascending=True).head(1)
     best_segment = odds_segments.sort_values("roi", ascending=False).head(1)
@@ -1545,7 +1644,7 @@ def run_betting_failure_diagnostics() -> dict[str, Any]:
     )
     market_better_calibrated = pd.notna(model_gap) and pd.notna(market_gap) and market_gap < model_gap
 
-    print("Betting failure diagnostics:")
+    print(f"{model_label} betting failure diagnostics:")
     if not top_losing_segment.empty:
         row = top_losing_segment.iloc[0]
         print(f"- top losing segment: {row['odds_bucket']} (ROI={row['roi']:.6f}, bets={int(row['number_of_bets'])})")
@@ -1576,23 +1675,187 @@ def run_betting_failure_diagnostics() -> dict[str, Any]:
         "time_segment_performance": time_segment_performance,
         "summary_text": summary_text,
         "created_files": [
-            str(BETTING_SEGMENT_BY_SIDE_PATH),
-            str(BETTING_SEGMENT_BY_ODDS_BUCKET_PATH),
-            str(BETTING_SEGMENT_BY_MARKET_PROB_BUCKET_PATH),
-            str(BETTING_SEGMENT_BY_MODEL_PROB_BUCKET_PATH),
-            str(BETTING_SEGMENT_BY_EDGE_BUCKET_PATH),
-            str(BETTING_EDGE_QUALITY_PATH),
-            str(BETTING_EDGE_CORRELATIONS_PATH),
-            str(BETTING_MODEL_CALIBRATION_ON_MATCHED_ODDS_PATH),
-            str(BETTING_MARKET_CALIBRATION_ON_MATCHED_ODDS_PATH),
-            str(BETTING_FAVORITE_LONGSHOT_ANALYSIS_PATH),
-            str(BETTING_CUMULATIVE_PROFIT_PATH),
-            str(BETTING_TIME_SEGMENT_PERFORMANCE_PATH),
-            str(BETTING_FAILURE_DIAGNOSTICS_SUMMARY_PATH),
+            str(segment_by_side_path),
+            str(segment_by_odds_bucket_path),
+            str(segment_by_market_prob_bucket_path),
+            str(segment_by_model_prob_bucket_path),
+            str(segment_by_edge_bucket_path),
+            str(edge_quality_path),
+            str(edge_correlations_path),
+            str(model_calibration_path),
+            str(market_calibration_path),
+            str(favorite_longshot_path),
+            str(cumulative_profit_path),
+            str(time_segment_performance_path),
+            str(summary_path),
         ],
         "higher_edge_improved_roi": higher_edge_improved_roi,
         "longshots_caused_major_losses": longshots_caused_major_losses,
         "market_better_calibrated": market_better_calibrated,
+    }
+
+
+def run_random_forest_betting_failure_diagnostics() -> dict[str, Any]:
+    """Run historical Random Forest betting diagnostics for continuity."""
+    return run_model_betting_failure_diagnostics(
+        model_label="Random Forest",
+        prediction_path=FINAL_RANDOM_FOREST_TEST_PREDICTIONS_PATH,
+        flat_bets_path=BETTING_FLAT_BACKTEST_BETS_PATH,
+        flat_results_path=BETTING_FLAT_BACKTEST_RESULTS_PATH,
+        segment_by_side_path=BETTING_SEGMENT_BY_SIDE_PATH,
+        segment_by_odds_bucket_path=BETTING_SEGMENT_BY_ODDS_BUCKET_PATH,
+        segment_by_market_prob_bucket_path=BETTING_SEGMENT_BY_MARKET_PROB_BUCKET_PATH,
+        segment_by_model_prob_bucket_path=BETTING_SEGMENT_BY_MODEL_PROB_BUCKET_PATH,
+        segment_by_edge_bucket_path=BETTING_SEGMENT_BY_EDGE_BUCKET_PATH,
+        edge_quality_path=BETTING_EDGE_QUALITY_PATH,
+        edge_correlations_path=BETTING_EDGE_CORRELATIONS_PATH,
+        model_calibration_path=BETTING_MODEL_CALIBRATION_ON_MATCHED_ODDS_PATH,
+        market_calibration_path=BETTING_MARKET_CALIBRATION_ON_MATCHED_ODDS_PATH,
+        favorite_longshot_path=BETTING_FAVORITE_LONGSHOT_ANALYSIS_PATH,
+        cumulative_profit_path=BETTING_CUMULATIVE_PROFIT_PATH,
+        time_segment_performance_path=BETTING_TIME_SEGMENT_PERFORMANCE_PATH,
+        summary_path=BETTING_FAILURE_DIAGNOSTICS_SUMMARY_PATH,
+    )
+
+
+def run_logistic_betting_failure_diagnostics() -> dict[str, Any]:
+    """Run the main post-cutoff Logistic Regression betting diagnostics."""
+    return run_model_betting_failure_diagnostics(
+        model_label="Logistic Regression",
+        prediction_path=FINAL_LOGISTIC_TEST_PREDICTIONS_PATH,
+        flat_bets_path=LOGISTIC_BETTING_FLAT_BACKTEST_BETS_PATH,
+        flat_results_path=LOGISTIC_BETTING_FLAT_BACKTEST_RESULTS_PATH,
+        segment_by_side_path=LOGISTIC_BETTING_SEGMENT_BY_SIDE_PATH,
+        segment_by_odds_bucket_path=LOGISTIC_BETTING_SEGMENT_BY_ODDS_BUCKET_PATH,
+        segment_by_market_prob_bucket_path=LOGISTIC_BETTING_SEGMENT_BY_MARKET_PROB_BUCKET_PATH,
+        segment_by_model_prob_bucket_path=LOGISTIC_BETTING_SEGMENT_BY_MODEL_PROB_BUCKET_PATH,
+        segment_by_edge_bucket_path=LOGISTIC_BETTING_SEGMENT_BY_EDGE_BUCKET_PATH,
+        edge_quality_path=LOGISTIC_BETTING_EDGE_QUALITY_PATH,
+        edge_correlations_path=LOGISTIC_BETTING_EDGE_CORRELATIONS_PATH,
+        model_calibration_path=LOGISTIC_BETTING_MODEL_CALIBRATION_ON_MATCHED_ODDS_PATH,
+        market_calibration_path=LOGISTIC_BETTING_MARKET_CALIBRATION_ON_MATCHED_ODDS_PATH,
+        favorite_longshot_path=LOGISTIC_BETTING_FAVORITE_LONGSHOT_ANALYSIS_PATH,
+        cumulative_profit_path=LOGISTIC_BETTING_CUMULATIVE_PROFIT_PATH,
+        time_segment_performance_path=LOGISTIC_BETTING_TIME_SEGMENT_PERFORMANCE_PATH,
+        summary_path=LOGISTIC_BETTING_FAILURE_DIAGNOSTICS_SUMMARY_PATH,
+    )
+
+
+def run_betting_failure_diagnostics() -> dict[str, Any]:
+    """Run the main post-cutoff betting diagnostics on frozen Logistic Regression probabilities."""
+    return run_logistic_betting_failure_diagnostics()
+
+
+def build_betting_model_backtest_comparison(
+    logistic_flat_results: pd.DataFrame,
+    rf_flat_results: pd.DataFrame,
+    logistic_kelly_results: pd.DataFrame,
+    rf_kelly_results: pd.DataFrame,
+    logistic_backtest_df: pd.DataFrame,
+    rf_backtest_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, str, str]:
+    """Compare post-cutoff Logistic betting against the historical Random Forest pass."""
+    rows: list[dict[str, Any]] = []
+    for model_name, flat_results, kelly_results, backtest_df in [
+        ("logistic_regression", logistic_flat_results, logistic_kelly_results, logistic_backtest_df),
+        ("random_forest_historical", rf_flat_results, rf_kelly_results, rf_backtest_df),
+    ]:
+        best_flat = flat_results.sort_values(["roi", "total_profit"], ascending=[False, False]).iloc[0] if not flat_results.empty else None
+        best_kelly = (
+            kelly_results.sort_values(["final_bankroll", "roi"], ascending=[False, False]).iloc[0]
+            if not kelly_results.empty else None
+        )
+        rows.append(
+            {
+                "model_name": model_name,
+                "matched_test_fights": int(len(backtest_df)),
+                "best_flat_threshold": float(best_flat["edge_threshold"]) if best_flat is not None else np.nan,
+                "best_flat_roi": float(best_flat["roi"]) if best_flat is not None else np.nan,
+                "best_flat_total_profit": float(best_flat["total_profit"]) if best_flat is not None else np.nan,
+                "best_flat_max_drawdown": float(best_flat["max_drawdown"]) if best_flat is not None else np.nan,
+                "best_kelly_threshold": float(best_kelly["edge_threshold"]) if best_kelly is not None else np.nan,
+                "best_kelly_fraction": float(best_kelly["kelly_fraction"]) if best_kelly is not None else np.nan,
+                "best_kelly_final_bankroll": float(best_kelly["final_bankroll"]) if best_kelly is not None else np.nan,
+                "best_kelly_roi": float(best_kelly["roi"]) if best_kelly is not None else np.nan,
+                "any_positive_flat_roi": bool((flat_results["roi"] > 0).any()) if not flat_results.empty else False,
+                "any_positive_kelly_final_bankroll": bool((kelly_results["final_bankroll"] > 1000).any()) if not kelly_results.empty else False,
+            }
+        )
+
+    comparison_df = pd.DataFrame(rows)
+    logistic_row = comparison_df.loc[comparison_df["model_name"].eq("logistic_regression")].iloc[0]
+    rf_row = comparison_df.loc[comparison_df["model_name"].eq("random_forest_historical")].iloc[0]
+    more_stable_model = (
+        "logistic_regression"
+        if logistic_row["best_flat_max_drawdown"] < rf_row["best_flat_max_drawdown"]
+        else "random_forest_historical"
+    )
+    logistic_improved_over_rf = (
+        logistic_row["best_flat_roi"] > rf_row["best_flat_roi"]
+        or logistic_row["best_kelly_final_bankroll"] > rf_row["best_kelly_final_bankroll"]
+    )
+
+    summary_lines = [
+        "Betting model backtest comparison summary:",
+        "- The post-2010 cutoff made Logistic Regression the strongest final probability model by log loss, ROC AUC, and Brier score.",
+        "- The Random Forest betting backtest is retained only as a historical/exploratory comparison.",
+        "",
+        "Flat betting comparison:",
+        f"- logistic best flat threshold: {logistic_row['best_flat_threshold']:.2f}",
+        f"- logistic best flat ROI: {logistic_row['best_flat_roi']:.6f}",
+        f"- random forest best flat threshold: {rf_row['best_flat_threshold']:.2f}",
+        f"- random forest best flat ROI: {rf_row['best_flat_roi']:.6f}",
+        "",
+        "Kelly comparison:",
+        f"- logistic best Kelly final bankroll: {logistic_row['best_kelly_final_bankroll']:.6f}",
+        f"- random forest best Kelly final bankroll: {rf_row['best_kelly_final_bankroll']:.6f}",
+        "",
+        "Overall interpretation:",
+        f"- more stable model by flat-bet drawdown: {more_stable_model}",
+        f"- logistic improved over RF on at least one betting criterion: {logistic_improved_over_rf}",
+        f"- any positive logistic flat ROI: {bool(logistic_row['any_positive_flat_roi'])}",
+        f"- any positive random-forest flat ROI: {bool(rf_row['any_positive_flat_roi'])}",
+        "- Threshold rankings remain descriptive only; they must not feed back into model tuning.",
+    ]
+    update_lines = [
+        "Post-cutoff betting model update summary:",
+        "- The repo now uses frozen Logistic Regression probabilities as the main betting input because Logistic became the strongest post-2010 probability model.",
+        "- The older Random Forest betting pass is preserved as historical/exploratory output only.",
+        f"- Logistic best flat ROI: {logistic_row['best_flat_roi']:.6f} at threshold {logistic_row['best_flat_threshold']:.2f}",
+        f"- Logistic best Kelly final bankroll: {logistic_row['best_kelly_final_bankroll']:.6f}",
+        f"- Random Forest historical best flat ROI: {rf_row['best_flat_roi']:.6f} at threshold {rf_row['best_flat_threshold']:.2f}",
+        f"- Random Forest historical best Kelly final bankroll: {rf_row['best_kelly_final_bankroll']:.6f}",
+        f"- Did the high-level conclusion change? Logistic improved over RF = {logistic_improved_over_rf}.",
+        "- The market no-vig probabilities remain the key benchmark, and betting results remain exploratory rather than a tuning target.",
+    ]
+    return comparison_df, "\n".join(summary_lines), "\n".join(update_lines)
+
+
+def run_betting_model_backtest_comparison() -> dict[str, Any]:
+    """Compare the main Logistic betting backtest against the retained historical RF backtest."""
+    logistic_results = run_logistic_betting_backtest()
+    rf_results = run_random_forest_betting_backtest()
+    comparison_df, summary_text, update_text = build_betting_model_backtest_comparison(
+        logistic_results["flat_results"],
+        rf_results["flat_results"],
+        logistic_results["kelly_results"],
+        rf_results["kelly_results"],
+        logistic_results["backtest_df"],
+        rf_results["backtest_df"],
+    )
+    comparison_df.to_csv(BETTING_MODEL_BACKTEST_COMPARISON_PATH, index=False)
+    BETTING_MODEL_BACKTEST_COMPARISON_SUMMARY_PATH.write_text(summary_text)
+    POST_CUTOFF_BETTING_MODEL_UPDATE_SUMMARY_PATH.write_text(update_text)
+
+    return {
+        "comparison_df": comparison_df,
+        "summary_text": summary_text,
+        "update_text": update_text,
+        "created_files": [
+            str(BETTING_MODEL_BACKTEST_COMPARISON_PATH),
+            str(BETTING_MODEL_BACKTEST_COMPARISON_SUMMARY_PATH),
+            str(POST_CUTOFF_BETTING_MODEL_UPDATE_SUMMARY_PATH),
+        ],
     }
 
 

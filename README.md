@@ -56,12 +56,12 @@ At the final hold-out step:
 - XGBoost did not beat either frozen benchmark
 
 ## Betting Backtest
-The first betting backtest uses:
-- frozen Random Forest probabilities
+The main post-cutoff betting backtest now uses:
+- frozen Logistic Regression probabilities
 - no-vig implied probabilities from the selected odds source
 - flat betting and capped fractional Kelly diagnostics
 
-This backtest is exploratory and not a production betting system. The repo keeps it as a frozen Random Forest betting pass for continuity, even though logistic regression became the strongest final post-cutoff probability model on the consumed hold-out benchmark.
+This backtest is exploratory and not a production betting system. The older Random Forest betting pass is still kept in the repo as a historical/exploratory comparison, but the live betting narrative now follows Logistic Regression because it became the strongest final post-cutoff probability model on the consumed hold-out benchmark.
 
 ## Why the Strategy Failed
 The post-hoc diagnostics suggest the main issues were:
@@ -72,7 +72,8 @@ The post-hoc diagnostics suggest the main issues were:
 - reliance on an aggregated odds source (`zewnetrzne`)
 
 See:
-- `outputs/betting_failure_diagnostics_summary.txt`
+- `outputs/logistic_betting_failure_diagnostics_summary.txt`
+- `outputs/betting_model_backtest_comparison_summary.txt`
 - `outputs/modeling_audit_report.md`
 
 ## Limitations
@@ -134,9 +135,10 @@ PY
 Run betting backtest diagnostics:
 ```bash
 python3 - <<'PY'
-from src.train_baseline_models import run_betting_backtest, run_betting_failure_diagnostics
+from src.train_baseline_models import run_betting_backtest, run_betting_failure_diagnostics, run_betting_model_backtest_comparison
 run_betting_backtest()
 run_betting_failure_diagnostics()
+run_betting_model_backtest_comparison()
 PY
 ```
 

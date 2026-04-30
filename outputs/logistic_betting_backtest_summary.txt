@@ -1,0 +1,26 @@
+Betting backtest summary:
+- model used: Logistic Regression
+- odds source: zewnetrzne
+- matched test fights with usable odds: 367
+- this backtest is exploratory and is not being used to tune the ML model.
+
+Flat betting:
+- best threshold by ROI: 0.00
+- bets: 367
+- total_profit: -14.238265
+- ROI: -0.038796
+- average_edge: 0.129103
+- max_drawdown: 26.506975
+
+Kelly betting:
+- best Kelly strategy by final bankroll: threshold=0.05, fractional_kelly=0.25
+- bets: 288
+- final_bankroll: 183.601672
+- total_profit: -816.398328
+- ROI: -0.106857
+- max_drawdown: 1189.707112
+
+Warnings and limitations:
+- The odds source is 'zewnetrzne', which appears to be an external or aggregated source rather than a directly tradable single sportsbook.
+- The backtest uses only fights with matched usable odds and frozen Logistic Regression test predictions.
+- No model retraining, feature tuning, or threshold optimization should feed back into the model after this step.

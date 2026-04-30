@@ -1,0 +1,9 @@
+Post-cutoff betting model update summary:
+- The repo now uses frozen Logistic Regression probabilities as the main betting input because Logistic became the strongest post-2010 probability model.
+- The older Random Forest betting pass is preserved as historical/exploratory output only.
+- Logistic best flat ROI: -0.038796 at threshold 0.00
+- Logistic best Kelly final bankroll: 183.601672
+- Random Forest historical best flat ROI: -0.044499 at threshold 0.08
+- Random Forest historical best Kelly final bankroll: 208.997119
+- Did the high-level conclusion change? Logistic improved over RF = True.
+- The market no-vig probabilities remain the key benchmark, and betting results remain exploratory rather than a tuning target.

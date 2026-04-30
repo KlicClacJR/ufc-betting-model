@@ -24,8 +24,17 @@ from src.modeling.xgboost_model import (  # noqa: F401
 from src.modeling.walk_forward import run_walk_forward_market_research  # noqa: F401
 from src.modeling.evaluation import build_final_model_test_comparison, build_final_model_comparison_summary  # noqa: F401
 from src.odds.odds_ingestion import run_odds_ingestion_pipeline  # noqa: F401
-from src.odds.betting_backtest import run_betting_backtest, run_random_forest_betting_backtest  # noqa: F401
-from src.odds.betting_diagnostics import run_betting_failure_diagnostics  # noqa: F401
+from src.odds.betting_backtest import (  # noqa: F401
+    run_betting_backtest,
+    run_logistic_betting_backtest,
+    run_random_forest_betting_backtest,
+    run_betting_model_backtest_comparison,
+)
+from src.odds.betting_diagnostics import (  # noqa: F401
+    run_betting_failure_diagnostics,
+    run_logistic_betting_failure_diagnostics,
+    run_random_forest_betting_failure_diagnostics,
+)
 from src.audits.audit_modeling import run_modeling_audit  # noqa: F401
 from src._pipeline_impl import run_final_model_family_comparison, main  # noqa: F401
 
@@ -39,8 +48,12 @@ __all__ = [
     'run_walk_forward_market_research',
     'run_odds_ingestion_pipeline',
     'run_betting_backtest',
+    'run_logistic_betting_backtest',
     'run_random_forest_betting_backtest',
     'run_betting_failure_diagnostics',
+    'run_logistic_betting_failure_diagnostics',
+    'run_random_forest_betting_failure_diagnostics',
+    'run_betting_model_backtest_comparison',
     'run_modeling_audit',
     'run_final_random_forest_evaluation',
     'run_final_xgboost_evaluation',
