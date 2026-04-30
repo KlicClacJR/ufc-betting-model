@@ -1,0 +1,19 @@
+check_name,feature_name,status,details
+expected_final_feature_set_matches_expected,,PASS,feature_count=12 expected_count=12
+logistic_saved_feature_set_matches_expected,,PASS,feature_count=12 expected_count=12
+random_forest_saved_feature_set_matches_expected,,PASS,feature_count=12 expected_count=12
+xgboost_saved_feature_set_matches_expected,,PASS,feature_count=12 expected_count=12
+final_feature_is_available_and_safe,diff_age,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_total_wins,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_total_losses,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_win_streak,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_td_landed_per_fight,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_kd_absorbed_per_fight,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_reach,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_sig_strike_accuracy,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_avg_fight_duration_seconds,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_decision_rate,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,pre_fight_red_late_finish_rate,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+final_feature_is_available_and_safe,diff_five_round_experience,PASS,"exists_in_modeling=True, exists_in_saved=True, safe_prefix=True, suspicious_hits=[]"
+rebuilt_modeling_df_matches_saved_modeling_dataset_v2,,PASS,"rebuilt_shape=(7347, 512), saved_shape=(7347, 512)"
+modeling_dataset_respects_post_2009_cutoff,,PASS,"rebuilt_min_date=2010-01-02 00:00:00, saved_min_date=2010-01-02 00:00:00, cutoff=2010-01-01"

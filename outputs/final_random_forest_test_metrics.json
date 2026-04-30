@@ -1,0 +1,55 @@
+{
+  "feature_names": [
+    "diff_age",
+    "diff_total_wins",
+    "diff_total_losses",
+    "diff_win_streak",
+    "diff_td_landed_per_fight",
+    "diff_kd_absorbed_per_fight",
+    "diff_reach",
+    "diff_sig_strike_accuracy",
+    "diff_avg_fight_duration_seconds",
+    "diff_decision_rate",
+    "pre_fight_red_late_finish_rate",
+    "diff_five_round_experience"
+  ],
+  "model_params": {
+    "n_estimators": 800,
+    "min_samples_split": 2,
+    "min_samples_leaf": 1,
+    "max_features": 0.3,
+    "max_depth": 12,
+    "criterion": "log_loss",
+    "class_weight": "balanced_subsample",
+    "bootstrap": true
+  },
+  "test_metrics": {
+    "log_loss": 0.6597555194860298,
+    "roc_auc": 0.6450525145336541,
+    "brier_score": 0.2337728642201258,
+    "accuracy": 0.6043290043290044,
+    "precision": 0.6226685796269728,
+    "recall": 0.6910828025477707,
+    "f1": 0.6550943396226415
+  },
+  "confusion_matrix": {
+    "labels": [
+      0,
+      1
+    ],
+    "matrix": [
+      [
+        264,
+        263
+      ],
+      [
+        194,
+        434
+      ]
+    ],
+    "tn": 264,
+    "fp": 263,
+    "fn": 194,
+    "tp": 434
+  }
+}

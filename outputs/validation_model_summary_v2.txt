@@ -1,0 +1,28 @@
+Recency model summary:
+- Recency features were added to let the model distinguish long-run cumulative ability from recent form.
+- selected last-N window: 2
+- selected exponential half-life (days): 180
+- selected model: previous_best_features_plus_both_recency_types
+- validation log_loss: 0.653112
+- validation roc_auc: 0.635962
+- validation brier_score: 0.230912
+- validation accuracy: 0.607048
+- log_loss improvement vs previous best (0.663442): +0.010330
+- roc_auc change vs previous best (0.642936): -0.006974
+- Fighters with fewer than N previous UFC bouts fall back to the smaller available history, and debut fights get zero-filled recency features.
+- All recency parameters were tuned on train + validation only. The hold-out test split was not used.
+
+Strongest recency coefficients in the selected model:
+- diff_recent_2_sig_strikes_landed_per_fight: coefficient=+0.191044
+- diff_exp_decay_sig_strikes_landed_per_fight: coefficient=-0.121598
+- diff_exp_decay_ctrl_seconds_per_fight: coefficient=+0.114702
+- diff_exp_decay_win_pct: coefficient=-0.083720
+- diff_recent_2_sig_strikes_landed_per_min: coefficient=+0.061604
+
+Validation comparison leaderboard:
+- previous_best_features_plus_both_recency_types: log_loss=0.653112, roc_auc=0.635962, accuracy=0.607048
+- previous_best_features_plus_best_exp_decay: log_loss=0.653141, roc_auc=0.634261, accuracy=0.604405
+- previous_best_features_without_recency: log_loss=0.653362, roc_auc=0.628982, accuracy=0.607930
+- previous_best_features_plus_best_last_N: log_loss=0.653387, roc_auc=0.634340, accuracy=0.610573
+- compact_recency_plus_elo: log_loss=0.670414, roc_auc=0.589894, accuracy=0.567401
+- compact_recency_model_only: log_loss=0.671168, roc_auc=0.587816, accuracy=0.570925

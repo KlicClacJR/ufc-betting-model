@@ -1,0 +1,1 @@
+"""UFC betting model package."""

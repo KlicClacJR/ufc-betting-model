@@ -1,0 +1,11 @@
+model_family,split_name,rows,start_date,end_date,red_win_mean,chronological_order_ok,train_validation_overlap_rows,train_test_overlap_rows,validation_test_overlap_rows,shared_dates_train_validation,shared_dates_validation_test,shared_dates_train_test,date_boundary_touching,subset_of_test_rows
+logistic_regression,train,5057,2010-01-02,2021-10-16,0.5758354755784062,True,0,0,0,0,0,0,False,
+logistic_regression,validation,1135,2021-10-23,2023-12-16,0.5709251101321586,True,0,0,0,0,0,0,False,
+logistic_regression,test,1155,2024-01-13,2026-03-28,0.5437229437229437,True,0,0,0,0,0,0,False,
+random_forest,train,5057,2010-01-02,2021-10-16,0.5758354755784062,True,0,0,0,0,0,0,False,
+random_forest,validation,1135,2021-10-23,2023-12-16,0.5709251101321586,True,0,0,0,0,0,0,False,
+random_forest,test,1155,2024-01-13,2026-03-28,0.5437229437229437,True,0,0,0,0,0,0,False,
+xgboost,train,5057,2010-01-02,2021-10-16,0.5758354755784062,True,0,0,0,0,0,0,False,
+xgboost,validation,1135,2021-10-23,2023-12-16,0.5709251101321586,True,0,0,0,0,0,0,False,
+xgboost,test,1155,2024-01-13,2026-03-28,0.5437229437229437,True,0,0,0,0,0,0,False,
+betting_backtest,matched_test_odds_subset,367,2024-01-13,2024-12-07,0.5395095367847411,True,0,0,0,0,0,0,False,True

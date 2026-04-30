@@ -1,0 +1,36 @@
+Feature set: previous_best_features_plus_both_recency_types
+logit(p_red_win) = intercept + sum(coefficient * standardized_feature)
+intercept = 0.323198
+
+Where standardized_feature = (imputed_value - scaler_mean) / scaler_scale
+and imputed_value uses the training-set median for missing values.
+
+Terms:
+-0.288749 * ((diff_age if present else 1.000000) - 0.603915) / 5.099206
+-0.495054 * ((diff_total_wins if present else 1.000000) - 1.380067) / 3.820252
++0.288586 * ((diff_total_losses if present else 0.000000) - 0.649595) / 2.681169
++0.078694 * ((diff_win_streak if present else 0.000000) - 0.161756) / 1.737106
++0.195356 * ((diff_td_landed_per_fight if present else 0.000000) - 0.212571) / 1.540925
++0.004019 * ((diff_kd_absorbed_per_fight if present else 0.000000) - 0.017104) / 0.339912
++0.088656 * ((diff_reach if present else 0.000000) - 0.009096) / 3.062708
++0.051255 * ((diff_sig_strike_accuracy if present else 0.012731) - 0.056708) / 0.224833
+-0.141387 * ((diff_ctrl_seconds_per_fight if present else 12.000000) - 24.193565) / 154.671638
++0.468287 * ((diff_elo if present else 9.010787) - 10.787240) / 33.387560
+-0.044683 * ((pre_fight_ko_loss_rate_diff if present else 0.000000) - 0.002858) / 0.257931
+-0.018140 * ((diff_recent_2_win_pct if present else 0.000000) - 0.063081) / 0.441199
++0.191044 * ((diff_recent_2_sig_strikes_landed_per_fight if present else 4.000000) - 5.318667) / 33.025287
++0.061604 * ((diff_recent_2_sig_strikes_landed_per_min if present else 0.226667) - 0.440278) / 3.231247
++0.024986 * ((diff_recent_2_td_landed_per_fight if present else 0.000000) - 0.139411) / 1.801622
+-0.027076 * ((diff_recent_2_ctrl_seconds_per_fight if present else 3.500000) - 19.163239) / 183.768314
++0.028377 * ((diff_recent_2_kd_per_fight if present else 0.000000) - 0.021060) / 0.507898
+-0.044792 * ((diff_recent_2_kd_absorbed_per_fight if present else 0.000000) - 0.040340) / 0.459400
+-0.083720 * ((diff_exp_decay_win_pct if present else 0.000000) - 0.065241) / 0.395361
+-0.121598 * ((diff_exp_decay_sig_strikes_landed_per_fight if present else 4.044158) - 5.442044) / 31.282707
+-0.010918 * ((diff_exp_decay_sig_strikes_landed_per_min if present else 0.209599) - 0.456494) / 2.993280
+-0.011636 * ((diff_exp_decay_td_landed_per_fight if present else 0.000000) - 0.162093) / 1.699004
++0.114702 * ((diff_exp_decay_ctrl_seconds_per_fight if present else 5.419982) - 20.558473) / 175.043958
++0.016927 * ((diff_exp_decay_kd_per_fight if present else 0.000000) - 0.022661) / 0.467890
+-0.057626 * ((diff_exp_decay_kd_absorbed_per_fight if present else 0.000000) - 0.036483) / 0.428475
+
+Probability transform:
+p_red_win = 1 / (1 + exp(-logit(p_red_win)))

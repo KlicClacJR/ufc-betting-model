@@ -1,0 +1,115 @@
+{
+  "feature_names": [
+    "diff_age",
+    "diff_total_wins",
+    "diff_total_losses",
+    "diff_win_streak",
+    "diff_td_landed_per_fight",
+    "diff_kd_absorbed_per_fight",
+    "diff_reach",
+    "diff_sig_strike_accuracy",
+    "diff_avg_fight_duration_seconds",
+    "diff_decision_rate",
+    "pre_fight_red_late_finish_rate",
+    "diff_five_round_experience"
+  ],
+  "search_space": {
+    "n_estimators": [
+      200,
+      300,
+      500,
+      800,
+      1200
+    ],
+    "max_depth": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      12,
+      15,
+      null
+    ],
+    "min_samples_split": [
+      2,
+      5,
+      10,
+      20,
+      50
+    ],
+    "min_samples_leaf": [
+      1,
+      2,
+      5,
+      10,
+      20,
+      40
+    ],
+    "max_features": [
+      "sqrt",
+      "log2",
+      0.3,
+      0.5,
+      0.7,
+      null
+    ],
+    "bootstrap": [
+      true
+    ],
+    "criterion": [
+      "gini",
+      "entropy",
+      "log_loss"
+    ],
+    "class_weight": [
+      null,
+      "balanced",
+      "balanced_subsample"
+    ]
+  },
+  "n_iter": 100,
+  "best_parameters": {
+    "n_estimators": 800,
+    "min_samples_split": 2,
+    "min_samples_leaf": 1,
+    "max_features": 0.3,
+    "max_depth": 12,
+    "criterion": "log_loss",
+    "class_weight": "balanced_subsample",
+    "bootstrap": true
+  },
+  "best_validation_metrics": {
+    "log_loss": 0.6676028585524499,
+    "roc_auc": 0.6111373069083229,
+    "brier_score": 0.23724605383274996,
+    "accuracy": 0.6051202482544609
+  },
+  "baseline_random_forest_validation_metrics": {
+    "log_loss": 0.6809288010715054,
+    "roc_auc": 0.6146467251160392,
+    "brier_score": 0.24338486080462732,
+    "accuracy": 0.5927075252133437
+  },
+  "logistic_validation_benchmark": {
+    "log_loss": 0.6628194930536336,
+    "roc_auc": 0.6424126329232054,
+    "brier_score": 0.23552354569262893,
+    "accuracy": 0.6058960434445306
+  },
+  "train_summary": {
+    "rows": 6013,
+    "start_date": "1994-03-11",
+    "end_date": "2021-03-27",
+    "red_win_mean": 0.6617329120239481
+  },
+  "validation_summary": {
+    "rows": 1289,
+    "start_date": "2021-03-27",
+    "end_date": "2023-09-09",
+    "red_win_mean": 0.5702094647013188
+  },
+  "test_set_note": "Unused during Random Forest random search."
+}

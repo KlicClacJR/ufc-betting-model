@@ -1,0 +1,18 @@
+Hypothesis feature summary:
+- These features were designed as interpretable MMA hypotheses rather than generic feature-search output.
+- best hypothesis model: previous_best_features_plus_cardio_features
+- validation log_loss: 0.652001
+- validation roc_auc: 0.639024
+- validation brier_score: 0.230330
+- validation accuracy: 0.615859
+- log_loss improvement vs current previous-best feature set: +0.001385
+- roc_auc change vs current previous-best feature set: +0.004683
+- log_loss improvement vs global benchmark (0.663442): +0.011441
+- roc_auc change vs global benchmark (0.642936): -0.003912
+- feature groups that improved validation log loss over the current previous-best set: ['previous_best_features_plus_cardio_features']
+- If a group did not help here, that does not mean the MMA idea is wrong; it may mean the current formulation is too noisy.
+
+Strongest groups by leave-one-group-out ablation:
+- removing cardio_features: delta_log_loss_vs_full=+0.001448, delta_roc_auc_vs_full=-0.004671
+- removing finish_vs_durability_features: delta_log_loss_vs_full=-0.000022, delta_roc_auc_vs_full=+0.000200
+- removing td_matchup_interaction_features: delta_log_loss_vs_full=-0.000185, delta_roc_auc_vs_full=+0.000586

@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+
+# Large local datasets
+/data/UFC_betting_odds.csv
+/data/modeling_dataset_with_odds.csv
+/data/combined_statistics.csv
+/data/modeling_dataset_v1.csv
+/data/modeling_dataset_v2.csv
+/data/ufc_odds_clean_selected_source.csv
+/data/ufc_odds_clean_with_implied_probs.csv
+
+# Generated predictions and bet logs
+/outputs/*_predictions.csv
+/outputs/*_bets.csv
+/outputs/walk_forward_prediction_panel.csv
+
+# Archived exploratory outputs
+/outputs/archive/

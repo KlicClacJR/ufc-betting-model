@@ -1,0 +1,4 @@
+model_name,row_count,start_date,end_date,probability_column,probability_min,probability_max,probabilities_outside_0_1_count,missing_probability_count,target_mean,row_count_matches_expected_test,saved_labels_match_thresholded_probabilities
+logistic_regression,1155,2024-01-13,2026-03-28,predicted_red_win_probability,0.1968280328088332,0.9128661505737596,0,0,0.5437229437229437,True,True
+random_forest,1155,2024-01-13,2026-03-28,predicted_red_win_probability,0.230473830411458,0.8637578611037611,0,0,0.5437229437229437,True,True
+xgboost,1155,2024-01-13,2026-03-28,predicted_red_win_probability,0.36564618,0.73132515,0,0,0.5437229437229437,True,True

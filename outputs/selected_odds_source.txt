@@ -1,0 +1,2 @@
+zewnetrzne
+Note: 'zewnętrzne' / 'zewnetrzne' is treated as an external or aggregated source.

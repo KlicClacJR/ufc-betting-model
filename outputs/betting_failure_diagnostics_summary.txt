@@ -1,0 +1,25 @@
+Betting failure diagnostics summary:
+- This is post-hoc diagnostic analysis only. It must not be used to tune or retrain the model.
+- analyzed flat-betting policy threshold: 0.08
+
+Key findings:
+- higher edge led to better ROI: False
+- longshots caused major losses relative to favorites: True
+- market probabilities were better calibrated than the model on matched-odds fights: False
+- top losing odds segment: 3.0 <= odds < 5.0 (ROI=-0.136869, bets=99)
+- best odds segment: odds < 1.5 (ROI=0.414514, bets=3)
+
+Likely reasons the backtest lost money:
+- market efficiency and vig likely erased much of the modeled edge
+- the Random Forest probabilities appear imperfectly calibrated on the odds-matched subset
+- high-odds bets added noise and large drawdowns
+- the selected odds source is aggregated ('zewnetrzne') rather than a sharp directly tradable source
+- some model signals may already be partially priced by the market
+
+Future improvement ideas:
+- calibrate probabilities on validation only before betting
+- use line shopping or best available book prices instead of one aggregated source
+- prefer a sharper source such as Pinnacle if coverage is acceptable
+- avoid or separately analyze longshots and other volatile odds regions
+- compare model-versus-market edge by odds region before staking
+- add closing-line-value analysis if timestamped odds are reliable

@@ -1,0 +1,13 @@
+feature,importance
+diff_age,0.20678486
+diff_total_losses,0.13163954
+diff_reach,0.11489264
+diff_kd_absorbed_per_fight,0.080751866
+diff_win_streak,0.07655684
+diff_td_landed_per_fight,0.072656356
+diff_sig_strike_accuracy,0.06957029
+diff_total_wins,0.06584728
+pre_fight_red_late_finish_rate,0.06392536
+diff_five_round_experience,0.04768253
+diff_avg_fight_duration_seconds,0.039726883
+diff_decision_rate,0.02996556

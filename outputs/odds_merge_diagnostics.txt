@@ -1,0 +1,10 @@
+Odds file used: UFC_betting_odds.csv
+Selected source: zewnetrzne
+Odds format detected: decimal
+Total model rows: 7347
+Matched rows: 6055
+Match rate: 0.8241
+Unmatched rows: 1292
+Duplicate match count: 0
+Rows with invalid odds: 0
+Column mapping: {'event_date': 'event_date', 'fighter_1': 'fighter_1', 'fighter_2': 'fighter_2', 'fighter_1_odds': 'odds_1', 'fighter_2_odds': 'odds_2', 'source': 'source', 'timestamp': None}

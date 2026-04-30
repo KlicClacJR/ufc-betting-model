@@ -1,0 +1,25 @@
+Validation summary:
+- best feature set: all_core_features (log_loss=0.665419, roc_auc=0.637545, brier_score=0.236746, accuracy=0.602017)
+- baseline feature set: baseline_experience_features
+- log_loss improvement vs baseline: +0.011031
+- roc_auc change vs baseline: +0.016668
+- accuracy change vs baseline: +0.024050
+- top validation leaderboard:
+  - all_core_features: log_loss=0.665419, roc_auc=0.637545, accuracy=0.602017
+  - experience_plus_physical: log_loss=0.669158, roc_auc=0.637051, accuracy=0.592708
+  - experience_plus_durability: log_loss=0.674770, roc_auc=0.623678, accuracy=0.577967
+  - experience_plus_power: log_loss=0.675888, roc_auc=0.621627, accuracy=0.581846
+  - baseline_experience_features: log_loss=0.676450, roc_auc=0.620877, accuracy=0.577967
+- strongest red-favoring coefficients in the best model:
+  - diff_td_landed_per_fight: +0.254558
+  - diff_power_index: +0.122863
+  - diff_total_wins: +0.108857
+  - diff_win_streak: +0.089324
+  - diff_reach: +0.083852
+- strongest blue-favoring coefficients in the best model:
+  - diff_age: -0.278281
+  - diff_years_in_ufc: -0.145297
+  - diff_kd_efficiency_plain: -0.139466
+  - diff_kd_absorbed_per_fight: -0.122577
+  - diff_ctrl_seconds_per_fight: -0.116878
+- note: sklearn logistic regression here does not provide coefficient p-values or formal significance tests.

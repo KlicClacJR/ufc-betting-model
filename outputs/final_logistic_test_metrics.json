@@ -1,0 +1,54 @@
+{
+  "feature_names": [
+    "diff_age",
+    "diff_total_wins",
+    "diff_total_losses",
+    "diff_win_streak",
+    "diff_td_landed_per_fight",
+    "diff_kd_absorbed_per_fight",
+    "diff_reach",
+    "diff_sig_strike_accuracy",
+    "diff_avg_fight_duration_seconds",
+    "diff_decision_rate",
+    "pre_fight_red_late_finish_rate",
+    "diff_five_round_experience"
+  ],
+  "model_spec": {
+    "model_name": "elastic_net",
+    "penalty": "elasticnet",
+    "C": 10.0,
+    "solver": "saga",
+    "l1_ratio": 0.8,
+    "max_iter": 5000
+  },
+  "test_metrics": {
+    "log_loss": 0.6570501011956981,
+    "roc_auc": 0.6569060539769638,
+    "brier_score": 0.23254110532847527,
+    "accuracy": 0.5965367965367966,
+    "precision": 0.5910112359550562,
+    "recall": 0.8375796178343949,
+    "f1": 0.6930171277997365
+  },
+  "confusion_matrix": {
+    "labels": [
+      0,
+      1
+    ],
+    "matrix": [
+      [
+        163,
+        364
+      ],
+      [
+        102,
+        526
+      ]
+    ],
+    "tn": 163,
+    "fp": 364,
+    "fn": 102,
+    "tp": 526
+  },
+  "intercept": 0.3171930749666524
+}

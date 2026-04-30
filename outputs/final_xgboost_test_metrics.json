@@ -1,0 +1,60 @@
+{
+  "feature_names": [
+    "diff_age",
+    "diff_total_wins",
+    "diff_total_losses",
+    "diff_win_streak",
+    "diff_td_landed_per_fight",
+    "diff_kd_absorbed_per_fight",
+    "diff_reach",
+    "diff_sig_strike_accuracy",
+    "diff_avg_fight_duration_seconds",
+    "diff_decision_rate",
+    "pre_fight_red_late_finish_rate",
+    "diff_five_round_experience"
+  ],
+  "model_params": {
+    "objective": "binary:logistic",
+    "eval_metric": "logloss",
+    "random_state": 42,
+    "n_jobs": -1,
+    "verbosity": 0,
+    "subsample": 0.85,
+    "reg_lambda": 5,
+    "reg_alpha": 0,
+    "n_estimators": 300,
+    "min_child_weight": 5,
+    "max_depth": 2,
+    "learning_rate": 0.01,
+    "colsample_bytree": 1.0
+  },
+  "test_metrics": {
+    "log_loss": 0.6690269216013832,
+    "roc_auc": 0.6411864417022202,
+    "brier_score": 0.23824557662010193,
+    "accuracy": 0.5800865800865801,
+    "precision": 0.5679012345679012,
+    "recall": 0.9522292993630573,
+    "f1": 0.711481261154075
+  },
+  "confusion_matrix": {
+    "labels": [
+      0,
+      1
+    ],
+    "matrix": [
+      [
+        72,
+        455
+      ],
+      [
+        30,
+        598
+      ]
+    ],
+    "tn": 72,
+    "fp": 455,
+    "fn": 30,
+    "tp": 598
+  }
+}

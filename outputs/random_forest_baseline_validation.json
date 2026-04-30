@@ -1,0 +1,47 @@
+{
+  "feature_names": [
+    "diff_age",
+    "diff_total_wins",
+    "diff_total_losses",
+    "diff_win_streak",
+    "diff_td_landed_per_fight",
+    "diff_kd_absorbed_per_fight",
+    "diff_reach",
+    "diff_sig_strike_accuracy",
+    "diff_avg_fight_duration_seconds",
+    "diff_decision_rate",
+    "pre_fight_red_late_finish_rate",
+    "diff_five_round_experience"
+  ],
+  "parameters": {
+    "n_estimators": 200,
+    "max_depth": 5,
+    "min_samples_leaf": 10,
+    "max_features": "sqrt",
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "validation_metrics": {
+    "log_loss": 0.6809288010715054,
+    "roc_auc": 0.6146467251160392,
+    "brier_score": 0.2433848608046273,
+    "accuracy": 0.5927075252133437
+  },
+  "train_summary": {
+    "rows": 6013,
+    "start_date": "1994-03-11",
+    "end_date": "2021-03-27",
+    "red_win_mean": 0.6617329120239481
+  },
+  "validation_summary": {
+    "rows": 1289,
+    "start_date": "2021-03-27",
+    "end_date": "2023-09-09",
+    "red_win_mean": 0.5702094647013188
+  },
+  "test_summary_unused": {
+    "rows": 1289,
+    "start_date": "2023-09-09",
+    "end_date": "2026-03-28"
+  }
+}

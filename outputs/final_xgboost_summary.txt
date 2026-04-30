@@ -1,0 +1,26 @@
+Final xgboost summary:
+- This is a frozen hold-out evaluation after validation-only model selection.
+- The hold-out test set was not used for tuning this tree model.
+- Modeling-era cutoff: only fights on or after 2010-01-01 are included because earlier rows show corner-assignment instability.
+- final feature list: ['diff_age', 'diff_total_wins', 'diff_total_losses', 'diff_win_streak', 'diff_td_landed_per_fight', 'diff_kd_absorbed_per_fight', 'diff_reach', 'diff_sig_strike_accuracy', 'diff_avg_fight_duration_seconds', 'diff_decision_rate', 'pre_fight_red_late_finish_rate', 'diff_five_round_experience']
+- final model configuration: {'objective': 'binary:logistic', 'eval_metric': 'logloss', 'random_state': 42, 'n_jobs': -1, 'verbosity': 0, 'subsample': 0.85, 'reg_lambda': 5, 'reg_alpha': 0, 'n_estimators': 300, 'min_child_weight': 5, 'max_depth': 2, 'learning_rate': 0.01, 'colsample_bytree': 1.0}
+- train+validation date range: 2010-01-02 to 2023-12-16
+- test date range: 2024-01-13 to 2026-03-28
+
+Final test metrics:
+- log_loss: 0.669027
+- roc_auc: 0.641186
+- brier_score: 0.238246
+- accuracy: 0.580087
+- precision: 0.567901
+- recall: 0.952229
+- f1: 0.711481
+- confusion_matrix: [[72, 455], [30, 598]]
+
+Top feature importances:
+- diff_age: importance=0.199998
+- diff_total_losses: importance=0.120825
+- diff_win_streak: importance=0.105374
+- diff_td_landed_per_fight: importance=0.087200
+- diff_sig_strike_accuracy: importance=0.085103
+- diff_kd_absorbed_per_fight: importance=0.083204

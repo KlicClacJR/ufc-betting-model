@@ -1,0 +1,29 @@
+model_family,parameter_name,expected_value,actual_value,matches_expected,source_note
+logistic_regression,penalty,elasticnet,elasticnet,True,Read from frozen validated configuration.
+logistic_regression,solver,saga,saga,True,Read from frozen validated configuration.
+logistic_regression,C,10.0,10.0,True,Read from frozen validated configuration.
+logistic_regression,l1_ratio,0.8,0.8,True,Read from frozen validated configuration.
+logistic_regression,max_iter,5000,5000,True,Read from frozen validated configuration.
+logistic_regression,random_state,42,42,True,Injected by code during model construction.
+random_forest,n_estimators,800,800,True,Read from frozen validated configuration.
+random_forest,max_depth,12,12,True,Read from frozen validated configuration.
+random_forest,min_samples_split,2,2,True,Read from frozen validated configuration.
+random_forest,min_samples_leaf,1,1,True,Read from frozen validated configuration.
+random_forest,max_features,0.3,0.3,True,Read from frozen validated configuration.
+random_forest,bootstrap,True,True,True,Read from frozen validated configuration.
+random_forest,criterion,log_loss,log_loss,True,Read from frozen validated configuration.
+random_forest,class_weight,balanced_subsample,balanced_subsample,True,Read from frozen validated configuration.
+random_forest,random_state,42,42,True,Injected by code during model construction.
+random_forest,n_jobs,-1,-1,True,Injected by code during model construction.
+xgboost,n_estimators,300,300,True,Read from frozen validated configuration.
+xgboost,max_depth,2,2,True,Read from frozen validated configuration.
+xgboost,learning_rate,0.01,0.01,True,Read from frozen validated configuration.
+xgboost,subsample,0.85,0.85,True,Read from frozen validated configuration.
+xgboost,colsample_bytree,1.0,1.0,True,Read from frozen validated configuration.
+xgboost,min_child_weight,5,5,True,Read from frozen validated configuration.
+xgboost,reg_lambda,5,5,True,Read from frozen validated configuration.
+xgboost,reg_alpha,0,0,True,Read from frozen validated configuration.
+xgboost,objective,binary:logistic,binary:logistic,True,Read from frozen validated configuration.
+xgboost,eval_metric,logloss,logloss,True,Read from frozen validated configuration.
+xgboost,random_state,42,42,True,Read from frozen validated configuration.
+xgboost,n_jobs,-1,-1,True,Read from frozen validated configuration.

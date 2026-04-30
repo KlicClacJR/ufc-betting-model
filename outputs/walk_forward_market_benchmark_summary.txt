@@ -1,0 +1,35 @@
+Walk-forward market benchmark summary:
+- This is a separate research workflow built on pre-test, odds-matched data only.
+- The consumed final hold-out benchmark outputs were not modified or reused for tuning here.
+- frozen final feature set: ['diff_age', 'diff_total_wins', 'diff_total_losses', 'diff_win_streak', 'diff_td_landed_per_fight', 'diff_kd_absorbed_per_fight', 'diff_reach', 'diff_sig_strike_accuracy', 'diff_avg_fight_duration_seconds', 'diff_decision_rate', 'pre_fight_red_late_finish_rate', 'diff_five_round_experience']
+- modeling-era cutoff: fights on or after 2010-01-01
+- research rows before odds matching: 6192
+- odds-matched research rows: 4717
+- number of annual walk-forward folds: 11
+- fold design: expanding train, 1-year calibration, next-year test.
+
+Aggregate out-of-sample comparison:
+- market_novig: log_loss=0.618855, roc_auc=0.699807, brier_score=0.215365, accuracy=0.649145, calibration_gap=0.022096
+- rf_raw_market_blend: log_loss=0.619994, roc_auc=0.699292, brier_score=0.215708, accuracy=0.647657, calibration_gap=0.022915
+- rf_sigmoid_market_blend: log_loss=0.620041, roc_auc=0.699185, brier_score=0.215677, accuracy=0.649888, calibration_gap=0.024445
+- rf_isotonic_market_blend: log_loss=0.623666, roc_auc=0.695992, brier_score=0.217086, accuracy=0.656087, calibration_gap=0.027342
+- rf_sigmoid: log_loss=0.670013, roc_auc=0.590443, brier_score=0.238551, accuracy=0.593107, calibration_gap=0.024019
+- rf_raw: log_loss=0.675275, roc_auc=0.595573, brier_score=0.241063, accuracy=0.588892, calibration_gap=0.051616
+- rf_isotonic: log_loss=0.735833, roc_auc=0.589368, brier_score=0.241896, accuracy=0.591123, calibration_gap=0.038718
+
+- best method by log loss: market_novig
+- market no-vig log_loss: 0.618855
+- raw RF log_loss: 0.675275
+- sigmoid-calibrated RF log_loss: 0.670013
+- isotonic-calibrated RF log_loss: 0.735833
+- calibration improved over raw RF by log loss: True
+- market beat raw RF by log loss: True
+- best blend beat both market and raw RF by log loss: False
+- best blend method: rf_raw_market_blend with log_loss=0.619994
+- latest walk-forward year in this research sample: 2023, best method that year: market_novig
+
+Interpretation:
+- Market no-vig probabilities are the key external benchmark because they summarize tradable consensus information.
+- Calibration tests whether the model's probability scale is trustworthy, not just whether it can rank fights.
+- Blend tests ask whether the model adds incremental information on top of the market rather than replacing it outright.
+- Any future strategy rules should still be chosen without touching the consumed final hold-out test benchmark.

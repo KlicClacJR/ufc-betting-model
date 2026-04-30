@@ -1,0 +1,7 @@
+feature,variance,n_unique,most_common_share,drop_reason
+diff_sig_strikes_landed_per_min,0.0,1,1.0,constant
+diff_td_landed_per_min,0.0,1,1.0,constant
+diff_ctrl_seconds_per_min,0.0,1,1.0,constant
+diff_sub_att_per_min,0.0,1,1.0,constant
+diff_kd_per_min,0.0,1,1.0,constant
+pre_fight_kd_absorbed_per_min_diff,0.0,1,1.0,constant

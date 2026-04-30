@@ -1,0 +1,13 @@
+Final model comparison summary:
+- modeling-era cutoff: fights on or after 2010-01-01
+- best model by log loss: logistic_regression (0.657050)
+- best model by ROC AUC: logistic_regression (0.656906)
+- best model by Brier score: logistic_regression (0.232541)
+- best model by accuracy: random_forest (0.604329)
+
+Interpretation:
+- logistic_regression is the strongest test-time model for probability quality here because it won both log loss and Brier score.
+- Logistic regression remains the strongest ranking model by ROC AUC.
+- XGBoost did not surpass either Random Forest or logistic regression on this frozen hold-out evaluation.
+- If the downstream use case is betting probabilities, logistic_regression is the better starting point from this test run because log loss is the primary probability metric in this repo.
+- The hold-out test set has now been consumed for all three frozen model families and should not be reused for further tuning.

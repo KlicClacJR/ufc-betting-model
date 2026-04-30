@@ -1,0 +1,23 @@
+Cardio feature selection summary:
+- The cardio pool was trimmed using validation-only leave-one-out ablation and subset search.
+- full cardio pool feature count: 7
+- previous-best baseline log_loss: 0.653387
+- full cardio pool log_loss: 0.652461
+- selected minimal cardio subset size: 2
+- selected minimal cardio subset log_loss: 0.652001
+- selected minimal cardio subset roc_auc: 0.639024
+- selected cardio features: ['diff_decision_rate', 'pre_fight_red_late_finish_rate']
+- tie threshold for smaller subsets: 0.001 log loss
+
+Leave-one-out ranking inside the cardio pool:
+- removing diff_avg_fight_duration_seconds: delta_log_loss_vs_full_cardio=+0.000326, delta_roc_auc_vs_full_cardio=-0.000795
+- removing diff_third_round_or_later_rate: delta_log_loss_vs_full_cardio=+0.000022, delta_roc_auc_vs_full_cardio=-0.000041
+- removing diff_five_round_experience: delta_log_loss_vs_full_cardio=+0.000020, delta_roc_auc_vs_full_cardio=-0.000143
+- removing diff_decision_rate: delta_log_loss_vs_full_cardio=+0.000005, delta_roc_auc_vs_full_cardio=-0.000035
+
+Best near-tied cardio subsets:
+- size=2 | log_loss=0.652001 | roc_auc=0.639024 | features=[diff_decision_rate, pre_fight_red_late_finish_rate]
+- size=2 | log_loss=0.652226 | roc_auc=0.638044 | features=[diff_third_round_or_later_rate, pre_fight_red_late_finish_rate]
+- size=2 | log_loss=0.652492 | roc_auc=0.637629 | features=[diff_avg_fight_duration_seconds, pre_fight_red_late_finish_rate]
+- size=2 | log_loss=0.652495 | roc_auc=0.636837 | features=[diff_third_round_or_later_rate, pre_fight_blue_late_finish_rate]
+- size=2 | log_loss=0.652589 | roc_auc=0.636685 | features=[diff_avg_fight_duration_seconds, diff_third_round_or_later_rate]

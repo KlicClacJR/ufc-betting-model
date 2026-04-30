@@ -1,0 +1,114 @@
+{
+  "feature_names": [
+    "diff_age",
+    "diff_total_wins",
+    "diff_total_losses",
+    "diff_win_streak",
+    "diff_td_landed_per_fight",
+    "diff_kd_absorbed_per_fight",
+    "diff_reach",
+    "diff_sig_strike_accuracy",
+    "diff_avg_fight_duration_seconds",
+    "diff_decision_rate",
+    "pre_fight_red_late_finish_rate",
+    "diff_five_round_experience"
+  ],
+  "search_space": {
+    "n_estimators": [
+      100,
+      300,
+      500
+    ],
+    "max_depth": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "learning_rate": [
+      0.01,
+      0.03,
+      0.05,
+      0.1
+    ],
+    "subsample": [
+      0.7,
+      0.85,
+      1.0
+    ],
+    "colsample_bytree": [
+      0.7,
+      0.85,
+      1.0
+    ],
+    "min_child_weight": [
+      1,
+      3,
+      5
+    ],
+    "reg_lambda": [
+      1,
+      3,
+      5,
+      10
+    ],
+    "reg_alpha": [
+      0,
+      0.1,
+      1
+    ]
+  },
+  "n_iter": 100,
+  "best_parameters": {
+    "objective": "binary:logistic",
+    "eval_metric": "logloss",
+    "random_state": 42,
+    "n_jobs": -1,
+    "verbosity": 0,
+    "subsample": 0.85,
+    "reg_lambda": 5,
+    "reg_alpha": 0,
+    "n_estimators": 300,
+    "min_child_weight": 5,
+    "max_depth": 2,
+    "learning_rate": 0.01,
+    "colsample_bytree": 1.0
+  },
+  "best_validation_metrics": {
+    "log_loss": 0.6819829119776918,
+    "roc_auc": 0.613939438591321,
+    "brier_score": 0.24392925202846527,
+    "accuracy": 0.5888285492629945
+  },
+  "xgboost_baseline_validation_metrics": {
+    "log_loss": 0.6949066096359298,
+    "roc_auc": 0.6016871730641715,
+    "brier_score": 0.24767769873142242,
+    "accuracy": 0.582622187742436
+  },
+  "random_forest_baseline_validation_metrics": {
+    "log_loss": 0.6809288010715054,
+    "roc_auc": 0.6146467251160392,
+    "brier_score": 0.2433848608046273,
+    "accuracy": 0.5927075252133437
+  },
+  "logistic_validation_benchmark": {
+    "log_loss": 0.6628194930536336,
+    "roc_auc": 0.6424126329232054,
+    "brier_score": 0.23552354569262893,
+    "accuracy": 0.6058960434445306
+  },
+  "train_summary": {
+    "rows": 6013,
+    "start_date": "1994-03-11",
+    "end_date": "2021-03-27",
+    "red_win_mean": 0.6617329120239481
+  },
+  "validation_summary": {
+    "rows": 1289,
+    "start_date": "2021-03-27",
+    "end_date": "2023-09-09",
+    "red_win_mean": 0.5702094647013188
+  },
+  "test_set_note": "Unused during XGBoost tuning."
+}
